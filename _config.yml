@@ -12,7 +12,7 @@ timezone:
 # custom Site settings
 # more detail check out docs
 SEOTitle: David's blog 
-header-img: //o7bkkhiex.bkt.clouddn.com/lion-blur-bg.jpg
+header-img: /imgs/gray.png
 email: purecolor@foxmail.com
 description: "David Chen 在 Github 上的个人博客"
 keyword: # seo key words
