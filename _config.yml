@@ -71,7 +71,7 @@ ga_domain:
 # Sidebar settings
 sidebar: true
 sidebar-about-description: software engineer # 个人描述
-sidebar-avatar: /imgs/me.png    # use absolute URL
+sidebar-avatar: /imgs/me.jpeg    # use absolute URL
 
 
 # Featured Tags
