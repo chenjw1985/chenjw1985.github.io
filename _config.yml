@@ -71,7 +71,7 @@ ga_domain:
 # Sidebar settings
 sidebar: true
 sidebar-about-description: software engineer # 个人描述
-sidebar-avatar: xxx.jpg    # use absolute URL
+sidebar-avatar: /imgs/gray.png    # use absolute URL
 
 
 # Featured Tags
@@ -157,8 +157,8 @@ clip-avatar: "?imageView2/2/w/300/h/300/interlace/1/q/90"
 clip-home-post-bg: "?imageView2/1/w/800/h/300/interlace/1/q/70"
 
 # post default images
-post-default-img: #博文默认的图片
-post-default-img-mobile: #移动端显示的图片
+post-default-img: /imgs/gray.png #博文默认的图片
+post-default-img-mobile: /imgs/gray.png #移动端显示的图片
 
 # search api , set your custom key
 swiftype_key: 
