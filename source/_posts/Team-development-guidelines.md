@@ -2,14 +2,12 @@
 layout: post
 title: Team development guidelines
 subtitle: ""
-date: 2020-1-1 08:00
+date: 2020-2-14 10:00
 author: "David Chen"
 tags:
 	- Work
 	- Team
 ---
-
-# Select core team 开发规范
 
 > 为了团队开发的规范化，会对团队使用的工具有一定的约束性。
 > 本文档基于 Markdown 编写。
@@ -49,7 +47,7 @@ tags:
 ---
 ### Git flowchart
 
-![gitflow-model.src.002.jpeg](./sources/pics/gitflow-model.jpeg)
+![gitflow-model.src.002.jpeg](../pics/gitflow-model.jpeg)
 
 ---
 ### 分支管理
@@ -159,5 +157,5 @@ Core module 基于 `develop -> release -> master/tag`的推送流进行版本发
 ---
 ### Go 开发
 
-建议统一使用 `VSCode` 作为 go 开发工具，代码规范遵循 Uber 构建的规范。
+建议统一使用 `GoLand` 作为 go 开发工具，代码规范遵循 Uber 构建的规范。
 - [了解更多 Uber Go语言编程规范！](https://drive.google.com/open?id=1yLx2OLeC0rj5A6uSuEbkAQeKOmjK6WlX) 
