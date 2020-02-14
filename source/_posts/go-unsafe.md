@@ -4,7 +4,9 @@ date: 2020-01-07 13:58:14
 tags:
 ---
 
-unsafe.Pointer 其实就是类似 C 的 void *，在 go 中是用于各种指针相互转换的桥梁。uintptr 是 go 的内置类型，是能存储指针的整型，uintptr 的底层类型是 int，它和unsafe.Pointer 可相互转换。uintptr 和 unsafe.Pointer 的区别就是：unsafe.Pointer 只是单纯的通用指针类型，用于转换不同类型指针，它不可以参与指针运算；而 uintptr 是用于指针运算的，GC 不把 uintptr 当指针，也就是说 uintptr 无法持有对象，uintptr 类型的目标会被回收。go 的 unsafe 包很强大，基本上很少会去用它，它可以像 C 一样去操作内存。
+最近花时间阅读了下 pilosa/roaring 的源码，里面为用到了很多go unsafe这个包。正好利用放假时间学习了相关知识，这里做一些记录。
+unsafe.Pointer 在 go 中是用于各种指针相互转换的桥梁，类似 C 的 void *。uintptr 是 go 的内置类型，存储指针的整型，uintptr 的底层类型是 int，它和unsafe.Pointer 可相互转换。
+uintptr 和 unsafe.Pointer 的区别是：unsafe.Pointer 只是单纯的通用指针类型，用于转换不同类型指针，但是它不可以参与指针运算（所谓的指针运算就是类似`++--`）；而 uintptr 是可以用于指针运算的，但是 uintptr 无法持有对象，所以 GC 不会把 uintptr 当指针，意味着 uintptr 类型的目标会被回收。go 的 unsafe 包很强大，基本上很少会去用它，它可以像 C 一样去操作内存。
 
 三个指针类型：
 - 一种是我们常见的 `*`，用 `*` 去表示的指针；
