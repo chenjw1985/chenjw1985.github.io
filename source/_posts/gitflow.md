@@ -15,6 +15,10 @@
 
 ---
 
+### Merge
+
+![Alt text](../pics/gitmerge.png)
+
 ### Git flowchart
 
 ![Alt text](../pics/gitflow-model.jpeg)
