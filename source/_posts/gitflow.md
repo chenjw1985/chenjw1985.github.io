@@ -1,4 +1,4 @@
-#
+# Select Team Git Guidelines
 
 ## Git 使用规范
 
