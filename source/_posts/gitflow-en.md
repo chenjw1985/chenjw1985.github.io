@@ -1,14 +1,14 @@
 # Select Team Git Guidelines
 
-## Repos 管理
+## Repo management
 
-> 公司所有的 repos 都是通过 Terraform 进行管理的。对于 repo 的创建和修改都需要在 Devops 维护的 Infrastructure monorepo 中进行维护。
+> All select repos are now managed via TF. All repo creation will happen via Terraform in the Infrastructure monorepo.
 > [https://github.com/LiveRamp/infrastructure](https://github.com/LiveRamp/infrastructure)
 
-你可以在 `infrastructure / select / github /` 目录下看到 6 个文件:
+You can see these files under `infrastructure / select / github /`:
 
 ```bash
-main.tf # 一般无需修改，定义共用资源
+main.tf
 select_apac_repository.tf
 select_b2b_repository.tf
 select_core_repository.tf
@@ -16,11 +16,11 @@ select_tv_repository.tf
 select_vm_repository.tf
 ```
 
-我们已经按 team 将 terraform 脚本分成不同的文件维护，所以请在自己 team 的文件里进行资源创建.
+We have divided different `.tf` files by team, so please create resources in your own team file.
 
-### 创建 Repo
+### Create Repo
 
-1: 创建 feature 分支
+1: Build your terraform script
 
 ```bash
 # pull code
@@ -40,22 +40,24 @@ git commit -a "feat:create new repo for ..."
 git push origin new-repo-name
 ```
 
-2: 提交 `Draft PR`
+2: Create a `Draft PR`
 
-当你完成开发时，通常我们建议你应该先通过 `Create Pull Request` 按钮右侧的下拉按钮创建一个 `Draft PR`。这样你可以先自己检查代码，并查看 `atlantis plan` 是否运行正常。
+You could create a `Draft PR` by selecting the drop down when you add description for the change instead of clicking on `Create Pull Request`. This way, you can keep iterating before requesting review and no one in your team will be notified by email until you mark it `Ready for Review`.
 
-3: 测试你的代码
+3: Test your code
 
-当 PR 创建后，`atlantis plan` 会自动运行来检查你的代码是否正确。如果遇到 `Plan Error`，请检查 comments 中的 `Show Output`。按照错误信息进行修改，并提交代码到远程分支，然后再检查 `atlantis plan` 的结果，直到你的代码可以被正确的执行。
-当然 `atlantis plan` 执行成功后，你需要检查 `Show Output` 中的信息是否符合你的预期结果。如果符合你的预期，那么你可以将 PR 设置为 `Ready for Review`。按照公司的要求，你需要为你的 PR 选择正确的 `lable`，你可以通过右侧 `Lables` 选择标签。
+After you submit the PR, `atlantis plan` will run automatically. If you encounter `Plan Error` please check the `Show Output` of `atlantis plan` in the comments. If `atlantis plan` is successful and the `Show Output` as your expected, then you can make PR to `Ready for Review`.
 
-4: 执行你的代码
+**Note**: Please add the `lable` to your PR, select through `Lables` on the right of page.
 
-通常你的 PR 在获得一个 reviewer 批准后，你就可以执行 `atlantis apply -p select-github` 创建资源了。但是为了安全起见，我们建议你至少需要得到你的 lead 和 SRE-APAC 成员的批准后才可以执行 `atlantis apply -p select-github`。成功执行 `atlantis apply` 后代码会自动合并到 master 分支。
+4: Apply your code
 
-### PR 指南
+Usually, after your PR has been approved by a reviewer, you can run `atlantis apply -p select-github` to create resource. However, we recommend that your PR should be reviewed by **your Lead** and **SRE APAC team members** before it can be applied.
+The code will be merged automatically after `atlantis apply` run successfully.
 
-当你创建一个新的 PR 时，会看到下面的问题：
+### Pull Request
+
+You will see below questions when open a pull request.
 
 ```md
 <!-- Describe your changes above, then answer the below questions. -->
@@ -71,29 +73,27 @@ git push origin new-repo-name
 * Documentation added: <!-- Describe here -->
 ```
 
-- 通常我们的更改请求并没有对应的 JIRA ticket，所以一般都会设置为 `none`。
-- 我们需要在 `Draft PR` 阶段完成测试，所以这里可以设置为 `yes`。
-- 对于 `Anyone can apply it`，这取决于你的资源创建是否可以由任何人执行。
+It is often necessary to ensure that `Testing Done` and `Anyone can apply it` these two answers are accurate.
 
-### Repos 权限
+### Permissions
 
-- 对于 terraform 脚本, 每个人都有相同的权限，我们可以创建 feature 分支和提交 PR，然后通过审核后可以创建资源。
-- 对于 repos, 我们为每个 team 创建了一个 admin group。如果你需要 `admin` 权限, 你可以向你的 lead 申请。 通常 `write` 权限已经足够了。
+- For terraform scripts, everyone has the same write permissions.
+- For repos, we have set up a management group for each team. If you need `admin` permissions, please apply to your lead. **Usually, you should not need it, `write` is enough.**
 
-## Git 使用指南
+## Git usage guidelines
 
-1. 建议大部分操作都在命令行终端进行，如 `pull`、`push`、`commit`、`checkout` 等操作。
-2. 任何临时分支合并到固定分支的代码都需要提交 `pull request`,需要经过 `code review`。
-3. 建议先 `create draft pull request` 自己检查下，，再正式邀请 reviewer。
-4. `develop -> release -> master/tag` 需要 project owner 执行，每个 project 至少会有 2 个 owner。
-5. `develop -> feature` 建议使用 `rebase merge` 合并代码。
-6. `feature -> develop` 建议使用 `squash merge` 或者 `merge --no-ff` 合并代码。
-7. `develop -> release` 建议使用 `merge --no-ff` 或者 `squash merge` 合并代码。
-8. 时间跨度大于 `2` 天的 `feature`，需要每 2 天合并一次 `develop` 分支。
-9. `hotfix` 需要 `cherry-pick` 回 `develop` 分支和 `release`（如存在）。
-10. `release` 用于 `QA、CERT、PROD` 发布，发布完成后合并到 `master` 并创建 `tag`。
+- It is recommended that most operations are performed in the terminal, such as `pull`, `push`, `commit`, `checkout`, etc.
+- Any code merged into a fixed branch needs to submit a `pull request`, and need to go through a `code review`.
+- It is recommended that create a `draft pull request` for review by yourself first，then requesting a review by another member.
+- The merge flow `develop -> release -> master/tag` should be applied by the project owner. Each project will have two owners.
+- When merging code from `feature` to `develop`, it is recommended to use `squash merge` or `merge --no-ff`.
+- When merging code from `develop` to `feature`, it is recommended to use `rebase merge`.
+- When merging code from `develop` to `release`, it is recommended to use `squash merge` or `merge --no-ff`.
+- For a feature with a timespan greater than 2 days, you need to sync the `develop` branch to your `feature` branch every 2 days.
+- The `hotfix` need to `cherry-pick` to the `develop` branch and `release` branch(if exists).
+- The `release` branch is used for `QA`, `CERT` and `PROD`. After deployed, need to merge `release` branch to `master` branch and create a `tag`.
 
-### Merge 方式说明
+### Merge introduction
 
 ![Alt text](../pics/gitmerge.png)
 
@@ -101,28 +101,29 @@ git push origin new-repo-name
 
 ![Alt text](../pics/gitflow-model.jpeg)
 
-### 分支管理
+### Branch management
 
-Select team 主要使用 2 个实体分支（`master`,`develop`）和 3 个临时性分支（`feature`,`release`,`hotfix`）。
+For each repo, we mainly use 2 persist branches (`master`,` develop`) and 3 temporary branches (`feature`,` release`, `hotfix`).
 
-#### `master` 分支
+#### `master` branch
 
-master 为主分支，始终保持最后一次 release 发布的代码。不会基于该分支进行功能开发，该分支基于 release 合并。
+The master branch always keeps the latest release code. We will not develop features based on this branch.
 
-#### `develop` 分支
+#### `develop` branch
 
-develop 为开发分支，始终保持最新完成以及 bug 修复后的代码。develop 分支是创建 feature 的基线分支。
+We develop new features based on the develop branch, and you should creates a feature branch based on the develop branch for developing.
 
-#### `feature` 分支
+#### `feature` branch
 
-开发新功能时，以 develop 为基础创建 feature 分支。Select 使用 JIRA 进行任务管理，feature 分支的命名以 JIRA 任务 ID 为命名。例如：SELECT-2263。
-对于超过2天的 feature，建议每 2 天同步一次 develop 的代码到 feature 分支，避免最后提交时出现比较大的冲突。
-在提交你的代码到 develop 分支前，请先确认三件事：
-> `该功能是经过测试的。`
-> `该功能的单元测试覆盖率不低于 50%。`
-> `该功能的代码符合遵循的代码规范。`
+When developing a new feature, you need to create a feature branch based on develop branch. We use Jira for task management, so we can use Jira ID as the feature branch name, such as SELECT-2263.
+For features longer than 2 days, it is recommended to sync develop branch to feature branch every 2 days to avoid major conflicts when branch merging.
+Before committing your code to the develop branch, please confirm 3 things:
 
-#### `release` 分支
+- This feature is tested.
+- The unit test coverage of this feature is greater than 50%.
+- The code of this feature follows the code specification.
+
+#### `release` branch
 
 release 为预上线分支，QA 会使用 release 分支代码为基准进行测试和发布。
 每次 sprint 结束时，project owner 会基于 develop 分支创建用于 QA 测试的 release 分支。正式发布 release 后，需要将 release 的代码推送到 master 分支并创建版本 tag。
@@ -131,7 +132,7 @@ release 分支的命名基于`版本号规范`执行，release 分支在测试�
 > 如当前需要在 QA 测试 2.4.0 的代码，则从 develop 创建的 release 分支名称为：release-2.4.0。
 > 当 release-2.4.0 正式发布后推送代码到 master，并基于 master 创建 tag v2.4.0。
 
-#### `hotfix` 分支
+#### `hotfix` branch
 
 线上出现紧急问题时，基于对应版本 tag 创建 hotfix 分支进行代码修复。完成修复后需要合并代码到 develop 分支，并创建一个包含`新修正版本号`的 tag 分支。
 如其它 tag 发现有同样问题，则需要从目标 tag 建立分支，然后 `cherry-pick` hotfix 的代码到 tag 代码进行修复，并生成一个包含`新修正版本号`的 tag 分支。
